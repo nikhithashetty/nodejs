@@ -65,7 +65,9 @@ Chat Title
 .chat-title {
   flex: 0 1 45px;
   position: relative;
+  
   z-index: 2;
+
   background: rgba(0, 0, 0, 0.2);
   color: #fff;
   text-transform: uppercase;

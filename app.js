@@ -30,6 +30,7 @@ app.post('/send-msg',(req,res)=>{
  * @param {string} projectId The project to be used
  */
 async function runSample(msg,projectId = 'ft-bal-jdnxov') {
+  const arr1 =[]
   console.log("A"+msg)
   // A unconsole.lique identifier for the given session
  
@@ -56,12 +57,43 @@ var arr=[]
   // Send request and log result
   const responses = await sessionClient.detectIntent(request);
   console.log('Detected intent');
- 
+  var aa=responses[0].queryResult.webhookPayload
+  
   const result = responses[0].queryResult;
+  
   for(var i=0;i<result.fulfillmentMessages.length;i++)
   {
     var x=result.fulfillmentMessages[i]
+    if(x.message=="text")
+    {
     arr.push(x.text.text)
+    }
+   
+  }
+  console.log(arr)
+  for(var i=0;i<result.fulfillmentMessages.length;i++)
+  {
+    var obj={}
+ var x=result.fulfillmentMessages[i]
+
+ obj['message']=x.message
+ 
+ if(x.message=="text")
+ {
+   obj['text']=x.text.text
+   
+ }
+ else if(x.message=="quickReplies")
+ {
+   obj['quickReplies']=x.quickReplies.quickReplies
+   
+ }
+ arr1.push(obj)
+     /*
+    if(x.message=="text")
+    {
+    arr.push(x.text.text)
+    }*/
   }
   console.log(arr)
   //console.log(`  Query: ${result.queryText}`);

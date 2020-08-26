@@ -71,7 +71,7 @@ document.getElementById("mymsg").onsubmit = (e)=>{
 
 function serverMessage(response2) {
 
-
+console.log(response2)
   if ($('.message-input').val() != '') {
     return false;
   }
@@ -81,7 +81,19 @@ function serverMessage(response2) {
 
   setTimeout(function() {
     $('.message.loading').remove();
-    $('<div class="message new"><figure class="avatar"><img src="css/bot.png" /></figure>' + response2 + '</div>').appendTo($('.mCSB_container')).addClass('new');
+    for (var i=0;i<response2.length;i++)
+    {
+      if(response2[i].message=="text")
+      {
+    $('<div class="message new"><figure class="avatar"><img src="css/bot.png" /></figure>' + response2[i].text + '</div>').appendTo($('.mCSB_container')).addClass('new');
+    
+    }
+    else if(response2[i].message=="quickReplies")
+    {
+      $('<div class="message new"><figure class="avatar"><img src="css/bot.png" /></figure>' + response2[i].text + '</div>').appendTo($('.mCSB_container')).addClass('new');
+
+    }
+  }
     updateScrollbar();
   }, 100 + (Math.random() * 20) * 100);
 
@@ -104,7 +116,7 @@ function fetchmsg(){
           body:data
         }).then(res => res.json())
          .then(response => {
-          console.log(response);
+          
         serverMessage(response.Reply);
          // speechSynthesis.speak( new SpeechSynthesisUtterance(response.Reply))
         
