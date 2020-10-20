@@ -5,6 +5,7 @@ const bodyParse=require('body-parser')
 const app=express()
 const port=5000;
 const sessionId = uuid.v4();
+
 app.use(bodyParse.urlencoded({
     extended:false
 }))
@@ -19,8 +20,10 @@ app.use(function (req, res, next) {
     next();
   });
 app.post('/send-msg',(req,res)=>{
-
+  console.log("Request"+req+"fin")
+  console.log(req.body)
    runSample(req.body.data).then(data=>{
+    
         res.send({Reply:data})
     })
 
@@ -34,10 +37,11 @@ async function runSample(msg,projectId = 'ft-bal-jdnxov') {
   console.log("A"+msg)
   // A unconsole.lique identifier for the given session
  
-
+//console.log(aa)
   // Create a new session
   const sessionClient = new dialogflow.SessionsClient({
-      keyFilename:"D:/angular7/Chatbot_tutorial/FT-Bal-551c56a61f34.json"
+    projectId,
+      keyFilename:"FT-Bal-551c56a61f34.json"
   });
   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
 
@@ -60,7 +64,7 @@ var arr=[]
   var aa=responses[0].queryResult.webhookPayload
   
   const result = responses[0].queryResult;
-  
+  //console.log(result.fulfillmentMessages[2])
   for(var i=0;i<result.fulfillmentMessages.length;i++)
   {
     var x=result.fulfillmentMessages[i]
@@ -68,9 +72,11 @@ var arr=[]
     {
     arr.push(x.text.text)
     }
+    
    
   }
-  console.log(arr)
+  
+  //console.log(arr)
   for(var i=0;i<result.fulfillmentMessages.length;i++)
   {
     var obj={}
@@ -88,14 +94,28 @@ var arr=[]
    obj['quickReplies']=x.quickReplies.quickReplies
    
  }
+ else if(x.message=="payload")
+ {
+   //obj['quickReplies']=x.quickReplies.quickReplies
+  for(var j=1;j<7;j++)
+  {
+   
+    obj['url'+j+'']=x.payload.fields['url'+j+''].stringValue;
+  }
+  
+
+   
+ }
  arr1.push(obj)
+ console.log(arr1)
      /*
     if(x.message=="text")
     {
     arr.push(x.text.text)
     }*/
   }
-  console.log(arr)
+  
+  //console.log(arr)
   //console.log(`  Query: ${result.queryText}`);
   //console.log(`  Response: ${result.fulfillmentText}`);
   /*if (result.intent) {
@@ -103,7 +123,7 @@ var arr=[]
   } else {
     console.log(`  No intent matched.`);
   }*/
-  return arr;
+  return arr1;
 }
 
 app.listen(port,()=>{
